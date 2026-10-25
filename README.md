@@ -1,6 +1,6 @@
 # 🛡️ Fraud Flagger — Fraud Detection System
 
-**Project Name:** MFX Fraud Flagger
+**Project Name:** Fraud Flagger
 
 **Live Demo:** [https://fraud-flagger.streamlit.app/](https://fraud-flagger.streamlit.app/)
 
@@ -32,10 +32,7 @@ Include only features verified in the source code.
 Include only these three technologies in this section:
 
 - **Python:** Application logic and fraud detection functionality.
-- **HTML:** Webpage structure, if implemented.
-- **CSS:** Interface styling, if implemented.
 
-Do not add any other technologies to this section.
 
 ## 📂 Project Structure
 
@@ -46,18 +43,10 @@ Use this example as a formatting reference only:
 ```text
 Fraud-Flagger/
 ├── app.py
-├── models/
-│   └── fraud_model.pkl
-├── data/
-│   └── fraud_dataset.csv
-├── static/
-│   ├── style.css
-│   └── images/
-├── templates/
-│   └── index.html
-├── requirements.txt
+├── fraud_detection.py
+├── transactions.csv
 ├── README.md
-└── .gitignore
+
 ```
 
 Explain the purpose of each important file and folder in a Markdown table.
@@ -71,42 +60,6 @@ Explain the purpose of each important file and folder in a Markdown table.
 - Decision Tree Classifier
 - XGBoost Classifier
 
-## ⚙️ Installation
-
-Provide clear, step-by-step instructions for running the project locally in VS Code.
-
-**Step 1: Clone the repository**
-
-```bash
-git clone <https.//github.com/JD-Jaidev/Fraud -Flagger
-```
-
-**Step 2: Open the project directory**
-
-```bash
-cd MFX-Fraud -Flagger
-
-
-
-**Step 3: Create a virtual environment**
-
-```bash
-python -m venv .venv
-```
-
-**Step 4: Activate the environment on Windows**
-
-```bat
-.venv\Scripts\activate
-```
-
-**Step 5: Install dependencies**
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-Use the actual repository URL, folder name, and dependency file when available. Explain how to run the application using its actual entry-point filename.
 
 ## 📋 Requirements
 
@@ -114,7 +67,7 @@ Add a short section describing the essential requirements in one line.
 
 Example:
 
-**Requirements:** Python, VS Code, Git, a web browser, and the Python packages listed in `requirements.txt`.
+**Requirements:** Python, VS Code, Git, a web browser.
 
 Verify the actual Python version and dependency files before documenting them. Do not list unnecessary software or invent version numbers.
 
@@ -125,15 +78,11 @@ Explain the application's workflow in simple steps:
 1. The user opens Fraud Flagger.
 2. The user provides transaction information using the available input interface.
 3. The application processes the input.
-4. The configured model or detection logic evaluates the transaction.
 5. The application displays the prediction result.
 6. The user interprets the result as an indication, not definitive proof, of fraud.
 
 Adapt the workflow to match the actual implementation.
 
-## 📊 Dataset
-
-Describe the dataset used in the project, including its source, important features, and target variable, only when the information is available.
 
 ## ⚠️ Limitations
 
@@ -168,10 +117,3 @@ Clearly distinguish proposed improvements from existing features.
        Jaidev
        Jerlin
        Janani
-
-
-
-
-
-
-# Fraud-Flagger
