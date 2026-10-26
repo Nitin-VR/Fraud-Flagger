@@ -27,11 +27,11 @@ import fraud_detection as fd
 st.set_page_config(
     page_title="Fraud Flagger | High-Risk Transaction Monitor",
     page_icon="🛡️",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="collapsed",
 )
 
-# Dark Fintech Cybersecurity CSS Theme with Sidebar Removed
+# Dark Fintech Cybersecurity CSS Theme with Centralized Layout & Sidebar Removed
 CUSTOM_CSS = """
 <style>
     /* Remove and hide Streamlit sidebar completely */
@@ -45,38 +45,89 @@ CUSTOM_CSS = """
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
-    /* Header Box */
+    /* Centralize the entire UI container on screen with balanced max-width */
+    .block-container, [data-testid="stMainBlockContainer"] {
+        max-width: 1080px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding-top: 2rem !important;
+        padding-bottom: 3.5rem !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+
+    /* Header Box - Centralized */
     .brand-header-box {
         background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
         border: 1px solid rgba(239, 68, 68, 0.35);
         border-radius: 12px;
-        padding: 22px 26px;
-        margin-bottom: 20px;
+        padding: 24px 28px;
+        margin-bottom: 24px;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
     .brand-title {
         color: #EF4444;
-        font-size: 2.1rem;
+        font-size: 2.2rem;
         font-weight: 800;
         margin: 0;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 12px;
         letter-spacing: 0.04em;
+        text-align: center;
     }
     .brand-subtitle {
         color: #94A3B8;
         font-size: 0.95rem;
-        margin-top: 4px;
+        margin-top: 6px;
+        text-align: center;
     }
 
-    /* Ingestion Box at top */
-    .ingestion-container {
-        background: #111C35;
-        border: 1px solid rgba(59, 130, 246, 0.25);
-        border-radius: 12px;
-        padding: 20px 24px;
-        margin-bottom: 24px;
+    /* File Uploader Centralization */
+    [data-testid="stFileUploader"] {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+    [data-testid="stFileUploader"] section {
+        text-align: center;
+        border-radius: 12px !important;
+        background: #111C35 !important;
+        border: 1.5px dashed rgba(59, 130, 246, 0.35) !important;
+        padding: 1.5rem 1rem !important;
+    }
+    [data-testid="stFileUploader"] label {
+        text-align: center !important;
+        width: 100%;
+        display: block;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+
+    /* Status Summary Banner */
+    .status-summary-banner {
+        text-align: center;
+        color: #94A3B8;
+        font-size: 0.9rem;
+        background: #0F172A;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 10px 18px;
+        margin-bottom: 22px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .banner-separator {
+        color: rgba(255, 255, 255, 0.25);
     }
 
     /* High Flagged Card */
@@ -139,6 +190,30 @@ CUSTOM_CSS = """
         color: #F1F5F9;
         margin-top: 4px;
     }
+
+    /* Section Header */
+    .section-header-box {
+        text-align: center;
+        margin-top: 26px;
+        margin-bottom: 16px;
+    }
+    .section-title {
+        color: #F1F5F9;
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin: 0;
+        text-align: center;
+    }
+
+    /* Centered Download Button Container */
+    div[data-testid="stDownloadButton"] {
+        display: flex;
+        justify-content: center;
+        margin: 1.5rem 0;
+    }
+    div[data-testid="stDownloadButton"] button {
+        margin: 0 auto;
+    }
 </style>
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
@@ -159,27 +234,27 @@ st.markdown(
 
 
 # ---------------------------------------------------------------------------
-# Ingestion Area (Top of Page) - Upload Only
+# Ingestion Area (Top of Page) - Upload Only (Centered)
 # ---------------------------------------------------------------------------
-st.markdown('<div class="ingestion-container">', unsafe_allow_html=True)
-
-uploaded_file = st.file_uploader(
-    "📁 Upload Transaction CSV File",
-    type=["csv"],
-    help="Upload your transaction CSV. The system evaluates repeated PIN failures, unusual amounts, and rapid transaction frequency.",
-)
-
-st.markdown("</div>", unsafe_allow_html=True)
+upload_col1, upload_col2, upload_col3 = st.columns([1, 6, 1])
+with upload_col2:
+    uploaded_file = st.file_uploader(
+        "📁 Upload Transaction CSV File",
+        type=["csv"],
+        help="Upload your transaction CSV. The system evaluates repeated PIN failures, unusual amounts, and rapid transaction frequency.",
+    )
 
 
 # ---------------------------------------------------------------------------
 # Strict Gate: Show Results ONLY After User Uploads CSV File
 # ---------------------------------------------------------------------------
 if uploaded_file is None:
-    st.info(
-        "👆 **Awaiting CSV File:** Please upload a transaction CSV file above to run fraud detection and view high flagged transactions.",
-        icon="📁",
-    )
+    wait_col1, wait_col2, wait_col3 = st.columns([1, 6, 1])
+    with wait_col2:
+        st.info(
+            "👆 **Awaiting CSV File:** Please upload a transaction CSV file above to run fraud detection and view high flagged transactions.",
+            icon="📁",
+        )
     st.stop()
 
 
@@ -197,9 +272,11 @@ if raw_df is None or raw_df.empty:
     st.stop()
 
 if load_warnings:
-    with st.expander("ℹ️ CSV Column Mapping & Ingestion Notes", expanded=False):
-        for w in load_warnings:
-            st.caption(f"• {w}")
+    warn_col1, warn_col2, warn_col3 = st.columns([1, 6, 1])
+    with warn_col2:
+        with st.expander("ℹ️ CSV Column Mapping & Ingestion Notes", expanded=False):
+            for w in load_warnings:
+                st.caption(f"• {w}")
 
 
 # ---------------------------------------------------------------------------
@@ -232,11 +309,18 @@ high_count = len(high_flagged_df)
 total_high_volume = high_flagged_df["amount"].sum() if high_count > 0 else 0.0
 locked_count = int(high_flagged_df.get("auth_lockout", pd.Series(False)).sum())
 
-# Status summary banner
-st.caption(
-    f"**Analyzed File:** `{uploaded_file.name}` | "
-    f"**Total Ingested Rows:** {total_ingested:,} | "
-    f"**High-Risk Flagged Count:** {high_count:,}"
+# Status summary banner (Centered)
+st.markdown(
+    f"""
+    <div class="status-summary-banner">
+        <span>📄 <b>Analyzed File:</b> <code>{uploaded_file.name}</code></span>
+        <span class="banner-separator">•</span>
+        <span>📊 <b>Total Ingested Rows:</b> {total_ingested:,}</span>
+        <span class="banner-separator">•</span>
+        <span>🚨 <b>High-Risk Flagged Count:</b> <span style="color: #EF4444; font-weight: 700;">{high_count:,}</span></span>
+    </div>
+    """,
+    unsafe_allow_html=True,
 )
 
 # Stat Chips
@@ -290,7 +374,9 @@ with stat_col4:
 st.write("")
 
 if high_flagged_df.empty:
-    st.success("✅ **Clean Security Status:** No high-risk flagged transactions were detected in the uploaded dataset.")
+    clean_col1, clean_col2, clean_col3 = st.columns([1, 4, 1])
+    with clean_col2:
+        st.success("✅ **Clean Security Status:** No high-risk flagged transactions were detected in the uploaded dataset.")
     st.stop()
 
 # Sort high flagged transactions by risk score descending
@@ -298,9 +384,16 @@ high_flagged_df = high_flagged_df.sort_values(by="risk_score", ascending=False)
 
 
 # ---------------------------------------------------------------------------
-# Section 1: Summary Table of High Flagged Transactions
+# Section 1: Summary Table of High Flagged Transactions (Centered Header)
 # ---------------------------------------------------------------------------
-st.markdown("### 🚨 **High Flagged Transactions Summary Table**")
+st.markdown(
+    """
+    <div class="section-header-box">
+        <h3 class="section-title">🚨 High Flagged Transactions Summary Table</h3>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 table_df = high_flagged_df.copy()
 table_df["triggered_rules_text"] = table_df["triggered_criteria"].apply(
@@ -351,10 +444,8 @@ st.dataframe(
 st.write("")
 
 
-
-
 # ---------------------------------------------------------------------------
-# CSV Export for High Flagged Transactions
+# CSV Export for High Flagged Transactions (Centered Button)
 # ---------------------------------------------------------------------------
 export_df = high_flagged_df.copy()
 export_df["triggered_criteria_list"] = export_df["triggered_criteria"].apply(
@@ -369,10 +460,12 @@ export_clean = export_df.drop(columns=[c for c in drop_cols if c in export_df.co
 
 csv_data = export_clean.to_csv(index=False).encode("utf-8")
 
-st.download_button(
-    label=f"💾 Download High Flagged Transactions CSV ({len(export_clean)} records)",
-    data=csv_data,
-    file_name=f"high_risk_flagged_transactions_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-    mime="text/csv",
-    use_container_width=False,
-)
+dl_col1, dl_col2, dl_col3 = st.columns([1, 2, 1])
+with dl_col2:
+    st.download_button(
+        label=f"💾 Download High Flagged Transactions CSV ({len(export_clean)} records)",
+        data=csv_data,
+        file_name=f"high_risk_flagged_transactions_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+        mime="text/csv",
+        use_container_width=True,
+    )

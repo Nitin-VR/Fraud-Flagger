@@ -16,7 +16,6 @@ This module provides reusable, robust functions for:
 
 Strict design: Pure data processing and backend analytics. No Streamlit UI code.
 """
-
 from __future__ import annotations
 
 import io
@@ -461,36 +460,6 @@ def detect_unusual_amounts(
     multiplier: float = 3.0,
     baseline_col: str = "normal_amount",
 ) -> pd.DataFrame:
-    """
-    Fraud Detection Criterion 2: Unusual Transaction Amount.
-
-    Requirements:
-    - Compare each transaction amount with the user's normal transaction baseline.
-    - Configurable multiplier (default 3.0).
-    - Flag when amount > baseline * multiplier.
-    - Prefer reliable historical baseline when sufficient history exists.
-    - Use provided 'normal_amount' column when appropriate.
-    - Handle missing, zero, and invalid baselines explicitly.
-    - Do NOT classify a transaction as suspicious if its baseline cannot be evaluated.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Cleaned transaction DataFrame.
-    multiplier : float, default 3.0
-        Multiplier for baseline threshold.
-    baseline_col : str, default 'normal_amount'
-        Column name holding user baseline.
-
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame augmented with:
-        - 'flag_unusual_amount' (bool)
-        - 'effective_baseline' (float)
-        - 'baseline_source' (str)
-        - 'reason_amount' (str)
-    """
     df_out = df.copy()
 
     df_out["flag_unusual_amount"] = False
@@ -555,36 +524,7 @@ def detect_high_frequency(
     window_minutes: int = 5,
     max_count: int = 5,
 ) -> pd.DataFrame:
-    """
-    Fraud Detection Criterion 3: Unusual Transaction Frequency.
 
-    Requirements:
-    - Group transactions by user.
-    - Sort records chronologically.
-    - Calculate transaction counts within a configurable rolling time window (default 5 min).
-    - Flag when transaction count in window exceeds trigger (default > 5 transactions).
-    - Avoid counting future transactions (strictly backward-looking [t - window, t]).
-    - Handle invalid timestamps and missing user IDs safely.
-    - Support precomputed 'transaction_count' if timestamp unavailable.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Cleaned transaction DataFrame.
-    window_minutes : int, default 5
-        Rolling window duration in minutes.
-    max_count : int, default 5
-        Maximum permitted transactions in the window before flagging.
-
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame augmented with:
-        - 'flag_high_frequency' (bool)
-        - 'frequency_in_window' (int)
-        - 'frequency_source' (str)
-        - 'reason_frequency' (str)
-    """
     df_out = df.copy()
 
     df_out["flag_high_frequency"] = False
